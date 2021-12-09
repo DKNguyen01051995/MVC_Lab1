@@ -15,15 +15,15 @@ import java.util.List;
 @Controller
 public class InventoryController {
 
-    DatabaseService service1;
+//    DatabaseService service1;
 
     @Autowired
     CategoryService service;
 
 
 
-    @Autowired
-    Connection123 connect;
+//    @Autowired
+//    Connection123 connect;
 
 
 
@@ -34,9 +34,9 @@ public class InventoryController {
     public String showCategorypage(ModelMap model,@RequestParam(defaultValue = "") String id) throws ClassNotFoundException, SQLException {
 
 
-        service1 = new DatabaseService(connect.connect());
+//        service1 = new DatabaseService(connect.connect());
 
-        model.addAttribute("todos", service1.display());
+        model.addAttribute("todos", service.retrieveTodos());
 
 
         List<Category> filteredTodos = new ArrayList<Category>();
@@ -58,11 +58,11 @@ public class InventoryController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showCategoryPage2(ModelMap model) throws ClassNotFoundException, SQLException {
 
-        service1 = new DatabaseService(connect.connect());
+//        service1 = new DatabaseService(connect.connect());
 
 
 
-        model.addAttribute("todos", service1.display());
+        model.addAttribute("todos", service.retrieveTodos());
 
 
         List<Category> filteredTodos = new ArrayList<Category>();
@@ -91,19 +91,19 @@ public class InventoryController {
     public String addTodo(ModelMap model, @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
 
+//
+//
+//        if (!((service1.search(catcode)) ==null)){
+//
+//            model.put("errorMessage","Record Existing");
+//            return "redirect:/category";
+//
+//        }
 
 
-        if (!((service1.search(catcode)) ==null)){
+//        Category cc = new Category(catcode,catdesc);
 
-            model.put("errorMessage","Record Existing");
-            return "redirect:/category";
-
-        }
-
-
-        Category cc = new Category(catcode,catdesc);
-
-        service1.add(cc);
+        service.addTodo(catcode, catdesc);
 
         model.clear();
         return "redirect:/category";
@@ -115,12 +115,14 @@ public class InventoryController {
 
         model.put("id", id);
 
+        //model.addAtribute("category",service.retrieve(id));
+        Category x = service.retrieve(id);
 
-        Category cc =  service1.search(id);
+//        Category cc =  service1.search(id);
 
 
-        model.put("id",cc.getCatcode());
-        model.put("desc", cc.getCatdesc());
+        model.put("id",x.getCatcode());
+        model.put("desc", x.getCatdesc());
 
 
 
@@ -134,9 +136,11 @@ public class InventoryController {
 
         String iid = (String) model.get("id");
 
-        Category cc = new Category(catcode,catdesc);
+//        Category cc = new Category(catcode,catdesc);
 
-        service1.edit(cc,iid);
+        service.deleteTodo(iid);
+        service.addTodo(catcode,catdesc);
+//        service1.edit(cc,iid);
 
         return "redirect:/";
 
@@ -148,53 +152,53 @@ public class InventoryController {
     public String deleteTodo(ModelMap model, @RequestParam String id) throws SQLException, ClassNotFoundException {
 
 
-        service1.delete(id);
-
+//        service1.delete(id);
+        service.deleteTodo(id);
 
         model.clear();
         return "redirect:/";
     }
-
-
-    @RequestMapping(value ="/see-todo", method = RequestMethod.GET)
-    public String seetodo(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
-
-        model.put("id", id);
-
-        service1 = new DatabaseService(connect.connect());
-
-        String iid = (String) model.get("id");
-
-        List<Items> Itemlist = new ArrayList<>();
-
-        Itemlist = service1.display2(iid);
-
-
-        if(Itemlist.size()==0){
-
-            model.put("errorMessage","There are not items for this category ");
-            return "redirect:/";
-        } else {
-            model.put("errorMessage"," ");
-        }
-
-        model.put("desc",iid);
-
-        System.out.println(iid);
-        model.addAttribute("todos1", service1.display2(iid));
-
-
-
-        return "items";
-    }
-
-
-    @RequestMapping(value ="/see-todo", method = RequestMethod.POST)
-    public String seetodo2(ModelMap model) throws SQLException, ClassNotFoundException {
-
-
-        return "redirect:/";
-    }
-
-
+//
+//
+//    @RequestMapping(value ="/see-todo", method = RequestMethod.GET)
+//    public String seetodo(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
+//
+//        model.put("id", id);
+//
+//        service1 = new DatabaseService(connect.connect());
+//
+//        String iid = (String) model.get("id");
+//
+//        List<Items> Itemlist = new ArrayList<>();
+//
+//        Itemlist = service1.display2(iid);
+//
+//
+//        if(Itemlist.size()==0){
+//
+//            model.put("errorMessage","There are not items for this category ");
+//            return "redirect:/";
+//        } else {
+//            model.put("errorMessage"," ");
+//        }
+//
+//        model.put("desc",iid);
+//
+//        System.out.println(iid);
+//        model.addAttribute("todos1", service1.display2(iid));
+//
+//
+//
+//        return "items";
+//    }
+//
+//
+//    @RequestMapping(value ="/see-todo", method = RequestMethod.POST)
+//    public String seetodo2(ModelMap model) throws SQLException, ClassNotFoundException {
+//
+//
+//        return "redirect:/";
+//    }
+//
+//
 }
